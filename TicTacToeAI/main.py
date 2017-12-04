@@ -23,6 +23,7 @@ def main():
     global steps
     player_a = Player.Player(player_a_mark, epsilon, False)
     player_b = Player.Player(player_b_mark, epsilon, False)
+    s.started()
     game = Game.GameManager(player_a, player_b, s)
     steps += 1
     for i in range(game_count):
@@ -32,7 +33,7 @@ def main():
         steps += 1
         if steps % eps_inter == 0 and epsilon > 0:
             epsilon -= eps_change
-
+    s.ended()
     s.print_statistic()
 
 

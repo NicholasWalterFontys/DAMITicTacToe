@@ -1,3 +1,5 @@
+import datetime
+
 class Statistic:
     def __init__(self):
         self.win_counter_1 = 0
@@ -5,6 +7,14 @@ class Statistic:
         self.start_counter_1 = 0
         self.start_counter_4 = 0
         self.draw_counter = 0
+        self.start_time = None
+        self.end_time = None
+
+    def started(self):
+        self.start_time = datetime.datetime.now()
+
+    def ended(self):
+        self.end_time = datetime.datetime.now()
 
     def draw(self):
         self.draw_counter += 1
@@ -28,3 +38,4 @@ class Statistic:
         print("4 wins: " + str(self.win_counter_4))
         print("4 starts: " + str(self.start_counter_4))
         print("draws: " + str(self.draw_counter))
+        print("-----\n\ntime taken: {}".format(self.end_time - self.start_time))
