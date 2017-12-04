@@ -6,7 +6,7 @@ import Player
 import Game
 import statistics
 
-game_count = 10
+game_count = 100
 epsilon = 1
 steps = 0
 eps_inter = 100

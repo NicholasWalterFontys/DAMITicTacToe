@@ -98,7 +98,7 @@ class Player:
                 temp.append(self.log[i][1]) # action
                 target_log.append(temp)
 
-            print(target_log)
+            #print(target_log)
             X = np.array(target_log)
             Y = np.array(self.log)[:, 3]
 
