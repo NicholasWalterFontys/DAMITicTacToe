@@ -38,7 +38,7 @@ class GameManager:
         self.game_state = np.zeros(9, dtype=np.int)
 
         # do one game iteration with first_move = True
-        self.current_player.play(self.game_state, self.action_callback, True)
+        self.current_player.play(np.array(self.game_state, copy=True), self.action_callback, True)
 
         self.game_loop()
 
@@ -50,7 +50,7 @@ class GameManager:
             self.other_player = temp
 
             # game continues
-            self.current_player.play(self.game_state, self.action_callback)
+            self.current_player.play(np.array(self.game_state, copy=True), self.action_callback)
 
     def action_callback(self, action, mark, reward_callback):
         # rewards --> total sum of rewards for this action to be given to the
@@ -61,16 +61,19 @@ class GameManager:
 
         # check if game is over, if so give rewards to other player
         if game_end_status == 1:
-            self.other_player.reward_me(LOST_REWARD, self.game_state, True)
-            reward_callback(reward, self.game_state, True)
+            self.other_player.reward_me(LOST_REWARD,
+                                        np.array(self.game_state, copy=True),
+                                        True)
+            reward_callback(reward, np.array(self.game_state, copy=True), True)
             self.game_over = True
         elif game_end_status == 2:
-            self.other_player.reward_me(DRAW_REWARD, self.game_state, True)
-            reward_callback(reward, self.game_state, True)
+            self.other_player.reward_me(DRAW_REWARD,
+                                        np.array(self.game_state, copy=True),
+                                        True)
+            reward_callback(reward, np.array(self.game_state, copy=True), True)
             self.game_over = True
         else:
-            reward_callback(reward, self.game_state)
-            #self.game_loop()
+            reward_callback(reward, np.array(self.game_state, copy=True))
 
     def apply_action(self, action, mark):
         #print("action: " + str(action))
