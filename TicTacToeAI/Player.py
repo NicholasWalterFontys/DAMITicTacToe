@@ -73,9 +73,6 @@ class Player:
 
             qvals = self.model.predict(np.array([target]))
 
-            print("qvals for player {}:".format(self.mark))
-            print(qvals)
-
             # prevent setting to middle segment on first move
             if first_move:
                 qvals[0][4] = 0
@@ -104,15 +101,6 @@ class Player:
             print(target_log)
             X = np.array(target_log)
             Y = np.array(self.log)[:, 3]
-
-            print("X:")
-            print(X.shape)
-
-            for x in X:
-                print(x)
-                print("\n")
-            print("Y:")
-            print(Y)
 
             self.model.fit(X, Y)
 
