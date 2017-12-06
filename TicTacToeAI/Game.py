@@ -76,36 +76,32 @@ class GameManager:
             reward_callback(reward, np.array(self.game_state, copy=True))
 
     def apply_action(self, action, mark):
-        #print("action: " + str(action))
-
         # check if segment is already set --> invalid
         if self.game_state[action] != 0:
-            #print("player " + str(mark) + " made invalid move")
+            print("player " + str(mark) + " made invalid move")
             return INVALID_REWARD, 0
 
         # get coordinates and translated game state (from 1D to 2D array)
         x, y, tgs = self.translate_coordinate(action)
 
+
         # apply our action
         tgs[x][y] = mark
-
-        #print("\ngame state:")
-        #print(tgs)
-        #print("\n")
+        print("gs: \n" + str(tgs))
 
         # intial reward is zero
         reward = 0
-
         game_end_status = 0
         # check if current player won the game
         if self.check_win(x, y, tgs, mark):
-            #print("win player " + str(mark))
+            print("win player " + str(mark))
             reward += WIN_REWARD
             game_end_status = 1
             self.statistic.win(mark)
+
         # check if current action resulted in a draw
         elif self.check_draw(x, y, tgs, mark):
-            #print("draw")
+            print("draw")
             reward += DRAW_REWARD
             game_end_status = 2
             self.statistic.draw()
@@ -133,8 +129,8 @@ class GameManager:
             reward += ONE_REWARD
 
         self.game_state = tgs.reshape(9)
-        #print("reward for this action: " + str(reward)
-        #      + " for player " + str(mark))
+        print("reward for this action: " + str(reward)
+              + " for player " + str(mark))
         return reward, game_end_status
 
     def check_win(self, x, y, tgs, mark):
@@ -191,8 +187,25 @@ class GameManager:
             counter += 1
         return counter
 
-
     def get_neighbours(self, x, y):
+        id = x + 3* y
+
+        neighbours = {
+            0: [[0, 1], [1, 0], [1, 1]],
+            1: [[0, 0], [0, 2], [1, 1]],
+            2: [[0, 1], [1, 1], [1, 2]],
+            3: [[0, 0], [1, 1], [1, 0]],
+            4: [[0, 0], [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1],
+                     [2, 2]],
+            5: [[0, 2], [1, 1], [2, 2]],
+            6: [[1, 0], [1, 1], [2, 1]],
+            7: [[2, 0], [1, 1], [2, 2]],
+            8: [[2, 1], [1, 1], [1, 2]]
+        }
+
+        return neighbours[id]
+        """
+        # doesnt work properly
         result = []
         for i in range(3):
             for j in range(3):
@@ -202,6 +215,7 @@ class GameManager:
                 if dist_t > 0 and dist_t < 2 and dist_x < 2 and dist_y < 2:
                     result.append([i, j])
         return result
+        """
 
     def translate_coordinate(self, action):
         y = action

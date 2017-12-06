@@ -29,7 +29,9 @@ def init_model():
     """
 
     # input dim --> 9 for prior gs, 9 for later gs, 1 for action
-    model.add(Dense(1, input_shape=(19,), kernel_initializer='normal',
+    #model.add(Dense(9, input_shape=(9,), kernel_initializer='normal',
+    #                activation='relu'))
+    model.add(Dense(1, input_dim=9, kernel_initializer='normal',
                     activation='relu'))
 
     rms = RMSprop()
@@ -68,11 +70,11 @@ class Player:
 
             target = []
             target.extend(temp_gs)
-            target.extend(temp_gs)
-            target.append(-1)
+            #target.extend(temp_gs)
+            #target.append(-1)
 
-            qvals = self.model.predict(np.array([target]))
-
+            qvals = self.model.predict(np.array([target]), batch_size=1)
+            print(qvals)
             # prevent setting to middle segment on first move
             if first_move:
                 qvals[0][4] = 0
@@ -89,14 +91,21 @@ class Player:
 
         # TODO: use rewards for actual learning
 
+        X = np.array([new_game_state])
+        Y = np.array([reward])
+        self.model.fit(X, Y)
+        self.model.save_weights("saved-models/log_{}.h5".format(self.mark))
+
+        """
         if game_over:
             target_log = []
             for i in range(len(self.log)):
                 temp = []
-                temp.extend(self.log[i][0]) # prior game state
+                #temp.extend(self.log[i][0]) # prior game state
                 temp.extend(self.log[i][2]) # later game state
-                temp.append(self.log[i][1]) # action
+                #temp.append(self.log[i][1]) # action
                 target_log.append(temp)
+                print(temp)
 
             #print(target_log)
             X = np.array(target_log)
@@ -108,6 +117,4 @@ class Player:
             # t = datetime.datetime.now()
             self.model.save_weights('saved-models/log_{}.h5'
                                     .format(self.mark))
-
-
-
+        """
