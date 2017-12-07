@@ -58,17 +58,17 @@ class GameManager:
         # game_end_status --> 0 for nothing, 1 for won, 2 for draw --> give
         # feedback to enemy player
         rewards, game_end_status = self.apply_action(action, mark)
-        #print(self.game_state.reshape((3, 3)))
-        #print("reward: " + str(rewards[action]))
 
         # check if game is over, if so give rewards to other player
         if game_end_status == 1:
+            print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
             reward_callback(rewards, np.array(self.game_state, copy=True), True)
             self.game_over = True
         elif game_end_status == 2:
+            print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
@@ -186,8 +186,8 @@ class GameManager:
             for a in pw:
                 sum += tgs[a]
             if sum == blocked_value:
-                return True
-        return False
+                counter += 1
+        return counter
 
     def get_neighbours(self, i):
         # not only direct neighbours but also opposing

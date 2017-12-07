@@ -61,22 +61,11 @@ class Player:
         if random.random() < self.epsilon:
             # select random field segment to play on
             self.action = random.randint(0, 8)
-            #print("random action player {}: {}".format(self.mark, self.action))
         else:
-            # get predicted action bla
-            temp_gs = game_state.tolist()
-
-            target = []
-            target.extend(temp_gs)
-            #target.extend(temp_gs)
-            #target.append(-1)
+            # target to predict from is the current game state
+            target = game_state.tolist()
 
             qvals = self.model.predict(np.array([target]), batch_size=1)
-            #print(qvals)
-
-            # prevent setting to middle segment on first move
-            #if first_move:
-            #    qvals[0][4] = 0
 
             # get the action with the highest value
             self.action = np.argmax(qvals)
@@ -87,38 +76,10 @@ class Player:
         # receive reward
         # receive new game state
         # save replay as [State, Action, NewState, Reward]
-        #self.log.append([self.game_state, self.action, new_game_state, reward])
 
-        # TODO: use rewards for actual learning
         X = np.array([new_game_state])
-        #Y_temp = np.zeros(9)
-        #Y_temp[self.action] = reward
-        #Y = np.array([Y_temp.tolist()])
-        #Y = np.array([reward])
         Y = np.array([rewards.tolist()])
         self.model.fit(X, Y, verbose=False)
         if game_over:
-            self.model.save_weights("saved-models/log_{}.h5".format(self.mark))
-
-        """
-        if game_over:
-            target_log = []
-            for i in range(len(self.log)):
-                temp = []
-                #temp.extend(self.log[i][0]) # prior game state
-                temp.extend(self.log[i][2]) # later game state
-                #temp.append(self.log[i][1]) # action
-                target_log.append(temp)
-                print(temp)
-
-            #print(target_log)
-            X = np.array(target_log)
-            Y = np.array(self.log)[:, 3]
-
-            self.model.fit(X, Y)
-
-        if self.step_counter % SAVE_INTERVAL == 0 or game_over:
-            # t = datetime.datetime.now()
-            self.model.save_weights('saved-models/log_{}.h5'
-                                    .format(self.mark))
-        """
+            self.model.save_weights("saved-models/log_{}.h5".format(self.mark),
+                                    overwrite=True)
