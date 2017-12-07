@@ -211,4 +211,4 @@ class GameManager:
             y -= 3
             x += 1
         temp_game_state = self.game_state.reshape((3, 3))
-        return x, y , np.array(temp_game_state, copy=True)
+        return x, y, np.array(temp_game_state, copy=True)
