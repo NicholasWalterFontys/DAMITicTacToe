@@ -84,21 +84,22 @@ class Player:
             print("learned action player {}: ".format(self.mark) + str(self.action))
         callback(self.action, self.mark, self.reward_me)
 
-    def reward_me(self, reward, new_game_state, game_over=False):
+    def reward_me(self, rewards, new_game_state, game_over=False):
         # receive reward
         # receive new game state
         # save replay as [State, Action, NewState, Reward]
-        self.log.append([self.game_state, self.action, new_game_state, reward])
+        #self.log.append([self.game_state, self.action, new_game_state, reward])
 
         # TODO: use rewards for actual learning
-
         X = np.array([new_game_state])
-        Y_temp = np.zeros(9)
-        Y_temp[self.action] = reward
-        Y = np.array([Y_temp.tolist()])
+        #Y_temp = np.zeros(9)
+        #Y_temp[self.action] = reward
+        #Y = np.array([Y_temp.tolist()])
         #Y = np.array([reward])
+        Y = np.array([rewards.tolist()])
         self.model.fit(X, Y, verbose=False)
-        self.model.save_weights("saved-models/log_{}.h5".format(self.mark))
+        if game_over:
+            self.model.save_weights("saved-models/log_{}.h5".format(self.mark))
 
         """
         if game_over:

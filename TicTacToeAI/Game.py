@@ -57,81 +57,95 @@ class GameManager:
         # current player
         # game_end_status --> 0 for nothing, 1 for won, 2 for draw --> give
         # feedback to enemy player
-        reward, game_end_status = self.apply_action(action, mark)
+        rewards, game_end_status = self.apply_action(action, mark)
 
         # check if game is over, if so give rewards to other player
         if game_end_status == 1:
-            self.other_player.reward_me(LOST_REWARD,
+            self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
-            reward_callback(reward, np.array(self.game_state, copy=True), True)
+            reward_callback(rewards, np.array(self.game_state, copy=True), True)
             self.game_over = True
         elif game_end_status == 2:
-            self.other_player.reward_me(DRAW_REWARD,
+            self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
-            reward_callback(reward, np.array(self.game_state, copy=True), True)
+            reward_callback(rewards, np.array(self.game_state, copy=True), True)
             self.game_over = True
         else:
-            reward_callback(reward, np.array(self.game_state, copy=True))
+            reward_callback(rewards, np.array(self.game_state, copy=True))
 
     def apply_action(self, action, mark):
-        # check if segment is already set --> invalid
-        if self.game_state[action] != 0:
-            #print("player " + str(mark) + " made invalid move")
-            return INVALID_REWARD, 0
+        # target list for rewards of each field
+        rewards = np.zeros(9)
 
-        # get coordinates and translated game state (from 1D to 2D array)
-        x, y, tgs = self.translate_coordinate(action)
+        for i in range(9):
+            # get coordinates and translated game state (from 1D to 2D array)
+            x, y, tgs = self.translate_coordinate(i)
+
+            if self.game_state[i] != 0:
+                rewards[i] = INVALID_REWARD
+                continue
+
+            # apply our action
+            tgs[x][y] = mark
+
+            # intial reward is zero
+            reward = 0
 
 
-        # apply our action
-        tgs[x][y] = mark
-        #print("gs: \n" + str(tgs))
+            game_end_status = 0
 
-        # intial reward is zero
-        reward = 0
-        game_end_status = 0
-        # check if current player won the game
-        if self.check_win(x, y, tgs, mark):
-            print("win player " + str(mark))
-            reward += WIN_REWARD
-            game_end_status = 1
-            self.statistic.win(mark)
+            # check if current player won the game
+            if self.check_win(x, y, tgs, mark):
+                reward += WIN_REWARD
+                # only save game status if this is the actual action the player
+                # carried out
+                if i == action:
+                    print(self.translate_coordinate(1)[2])
+                    print("win player " + str(mark))
+                    game_end_status = 1
+                    self.statistic.win(mark)
 
-        # check if current action resulted in a draw
-        elif self.check_draw(x, y, tgs, mark):
-            print("draw")
-            reward += DRAW_REWARD
-            game_end_status = 2
-            self.statistic.draw()
+            # check if current action resulted in a draw
+            elif self.check_draw(x, y, tgs, mark):
+                reward += DRAW_REWARD
+                # only save game status if this is the actual action the player
+                # carried out
+                if i == action:
+                    print(self.translate_coordinate(1)[2])
+                    print("draw")
+                    game_end_status = 2
+                    self.statistic.draw()
 
-        # check if our current action gives us a block of length 2
-        two_count = self.check_two_neighbours(x, y, tgs, mark)
-        reward += two_count * TWO_REWARD
+            # check if our current action gives us a block of length 2
+            two_count = self.check_two_neighbours(x, y, tgs, mark)
+            reward += two_count * TWO_REWARD
 
-        # calculate enemy mark
-        if mark == 1:
-            enemy_mark = 2
-        else:
-            enemy_mark = 1
+            # calculate enemy mark
+            if mark == 1:
+                enemy_mark = 2
+            else:
+                enemy_mark = 1
 
-        # --> negative mark = enemy mark
-        # check if our current action blocks an enemy move
-        two_blocked_count = self.check_two_neighbours(x, y, tgs, enemy_mark)
-        reward += two_blocked_count * TWO_BLOCK_REWARD
+            # check if our current action blocks an enemy move
+            two_blocked_count = self.check_two_neighbours(x, y, tgs, enemy_mark)
+            reward += two_blocked_count * TWO_BLOCK_REWARD
 
-        win_blocked_count = self.check_win_blocked(x, y, tgs, mark, enemy_mark)
-        reward += win_blocked_count * BLOCK_WIN_REWARD
+            # check if our current action blocks an enemy win
+            win_blocked_count = self.check_win_blocked(x, y, tgs, mark, enemy_mark)
+            reward += win_blocked_count * BLOCK_WIN_REWARD
 
-        if two_count == 0 and two_blocked_count == 0 \
-                and win_blocked_count == 0 and game_end_status == 0:
-            reward += ONE_REWARD
+            if two_count == 0 and two_blocked_count == 0 \
+                    and win_blocked_count == 0 and game_end_status == 0:
+                reward += ONE_REWARD
 
-        self.game_state = tgs.reshape(9)
-        #print("reward for this action: " + str(reward)
-        #      + " for player " + str(mark))
-        return reward, game_end_status
+            # only save game state if this is the true action
+            if i == action:
+                self.game_state = tgs.reshape(9)
+
+            rewards[i] = reward
+        return rewards, game_end_status
 
     def check_win(self, x, y, tgs, mark):
         # sum of array equals 3 times mark --> array is full of mark
@@ -224,4 +238,4 @@ class GameManager:
             y -= 3
             x += 1
         temp_game_state = self.game_state.reshape((3, 3))
-        return x, y , temp_game_state
+        return x, y , np.array(temp_game_state, copy=True)
