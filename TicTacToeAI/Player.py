@@ -61,8 +61,7 @@ class Player:
         if random.random() < self.epsilon:
             # select random field segment to play on
             self.action = random.randint(0, 8)
-            #print("random action player {}: ".format(self.mark) + str(
-            #    self.action))
+            #print("random action player {}: {}".format(self.mark, self.action))
         else:
             # get predicted action bla
             temp_gs = game_state.tolist()
