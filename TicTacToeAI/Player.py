@@ -31,7 +31,7 @@ def init_model():
     # input dim --> 9 for prior gs, 9 for later gs, 1 for action
     #model.add(Dense(9, input_shape=(9,), kernel_initializer='normal',
     #                activation='relu'))
-    model.add(Dense(1, input_dim=9, kernel_initializer='normal',
+    model.add(Dense(9, input_dim=9, kernel_initializer='normal',
                     activation='relu'))
 
     rms = RMSprop()
@@ -60,11 +60,10 @@ class Player:
         self.step_counter += 1
         if random.random() < self.epsilon:
             # select random field segment to play on
-            #print("random action " + str(self.mark))
             self.action = random.randint(0, 8)
+            #print("random action player {}: ".format(self.mark) + str(
+            #    self.action))
         else:
-            #print("learned action " + str(self.mark))
-
             # get predicted action bla
             temp_gs = game_state.tolist()
 
@@ -74,13 +73,15 @@ class Player:
             #target.append(-1)
 
             qvals = self.model.predict(np.array([target]), batch_size=1)
-            print(qvals)
+            #print(qvals)
+
             # prevent setting to middle segment on first move
-            if first_move:
-                qvals[0][4] = 0
+            #if first_move:
+            #    qvals[0][4] = 0
 
             # get the action with the highest value
             self.action = np.argmax(qvals)
+            print("learned action player {}: ".format(self.mark) + str(self.action))
         callback(self.action, self.mark, self.reward_me)
 
     def reward_me(self, reward, new_game_state, game_over=False):
@@ -92,8 +93,11 @@ class Player:
         # TODO: use rewards for actual learning
 
         X = np.array([new_game_state])
-        Y = np.array([reward])
-        self.model.fit(X, Y)
+        Y_temp = np.zeros(9)
+        Y_temp[self.action] = reward
+        Y = np.array([Y_temp.tolist()])
+        #Y = np.array([reward])
+        self.model.fit(X, Y, verbose=False)
         self.model.save_weights("saved-models/log_{}.h5".format(self.mark))
 
         """

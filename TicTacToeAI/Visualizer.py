@@ -11,12 +11,15 @@ def get_instance():
 
 
 class Visualizer:
-    def __init__(self):
+    def __init__(self, button_callback=None):
         self.root = tkinter.Tk()
         self.root.title = "Tic Tac Toe AI Visualizer"
         background = tkinter.Frame(master=self.root, width=620, heigh=620)
 
         self.strings = [None] * 9
+
+        if button_callback is None:
+            callback = self.button_callback
 
         for i in range(3):
             for j in range(3):
@@ -25,7 +28,7 @@ class Visualizer:
                 stringvar.set("")
                 b = tkinter.Button(master=background, textvariable=stringvar,
                                    #height=200, width=200,
-                                   command=lambda index=index: self.button_callback(index))
+                                   command=lambda index=index: callback(index))
                 x = i * 210
                 y = j * 210
                 b.place(x=x, y=y)

@@ -78,7 +78,7 @@ class GameManager:
     def apply_action(self, action, mark):
         # check if segment is already set --> invalid
         if self.game_state[action] != 0:
-            print("player " + str(mark) + " made invalid move")
+            #print("player " + str(mark) + " made invalid move")
             return INVALID_REWARD, 0
 
         # get coordinates and translated game state (from 1D to 2D array)
@@ -87,7 +87,7 @@ class GameManager:
 
         # apply our action
         tgs[x][y] = mark
-        print("gs: \n" + str(tgs))
+        #print("gs: \n" + str(tgs))
 
         # intial reward is zero
         reward = 0
@@ -129,8 +129,8 @@ class GameManager:
             reward += ONE_REWARD
 
         self.game_state = tgs.reshape(9)
-        print("reward for this action: " + str(reward)
-              + " for player " + str(mark))
+        #print("reward for this action: " + str(reward)
+        #      + " for player " + str(mark))
         return reward, game_end_status
 
     def check_win(self, x, y, tgs, mark):
