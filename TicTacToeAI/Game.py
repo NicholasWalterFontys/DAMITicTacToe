@@ -78,7 +78,7 @@ class GameManager:
     def apply_action(self, action, mark):
         # check if segment is already set --> invalid
         if self.game_state[action] != 0:
-            #print("player " + str(mark) + " made invalid move")
+            print("player " + str(mark) + " made invalid move")
             return INVALID_REWARD, 0
 
         # get coordinates and translated game state (from 1D to 2D array)
