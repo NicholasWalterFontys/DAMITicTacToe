@@ -1,14 +1,43 @@
 import datetime
+import json
 
 class Statistic:
-    def __init__(self):
-        self.win_counter_1 = 0
-        self.win_counter_4 = 0
-        self.start_counter_1 = 0
-        self.start_counter_4 = 0
-        self.draw_counter = 0
+    def __init__(self, total_games=0):
+        self.total_games = total_games
+
+        self.game_log = []
+
+        self.invalid_move_counter = {}
+        self.game_starter = None
+        self.game_started_time = None
+
         self.start_time = None
         self.end_time = None
+
+    def game_started(self, starter):
+        self.game_starter = starter
+        self.game_started_time = datetime.datetime.now()
+
+    def game_ended(self, end_game_state, winner=0):
+        game_time = (datetime.datetime.now() - self.game_started_time).total_seconds()
+        log = {"winner": winner,
+               "starter": self.game_starter,
+               "end_state": end_game_state,
+               "inv_moves": self.invalid_move_counter,
+               "game_time": game_time}
+        self.game_log.append(log)
+
+        self.invalid_move_counter = {}
+
+        percentage_done = int((len(self.game_log) / self.total_games) * 100)
+        t = "|" + "X" * percentage_done + "_" * (100 - percentage_done) + "|"
+        #print("{} per cent done".format(percentage_done))
+        print(t)
+
+    def invalid_move(self, player):
+        if player not in self.invalid_move_counter:
+            self.invalid_move_counter[player] = 0
+        self.invalid_move_counter[player] += 1
 
     def started(self):
         self.start_time = datetime.datetime.now()
@@ -16,26 +45,8 @@ class Statistic:
     def ended(self):
         self.end_time = datetime.datetime.now()
 
-    def draw(self):
-        self.draw_counter += 1
-
-    def win(self, mark):
-        if mark == 1:
-            self.win_counter_1 += 1
-        else:
-            self.win_counter_4 += 1
-
-    def started_game(self, mark):
-        if mark == 1:
-            self.start_counter_1 += 1
-        else:
-            self.start_counter_4 += 1
-
     def print_statistic(self):
-        print("total games: " + str(self.win_counter_1 + self.win_counter_4 + self.draw_counter))
-        print("1 wins: " + str(self.win_counter_1))
-        print("1 starts: " + str(self.start_counter_1))
-        print("4 wins: " + str(self.win_counter_4))
-        print("4 starts: " + str(self.start_counter_4))
-        print("draws: " + str(self.draw_counter))
-        print("-----\n\ntime taken: {}".format(self.end_time - self.start_time))
+        a = json.dumps(self.game_log, indent=4)
+        with open("log.txt", "w") as target:
+            target.write(a)
+        print("TODO: print statistic")

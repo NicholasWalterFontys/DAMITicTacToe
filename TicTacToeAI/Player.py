@@ -1,4 +1,3 @@
-import datetime
 from keras.models import Sequential
 from keras.layers.core import *
 from keras.optimizers import RMSprop
@@ -40,20 +39,16 @@ def init_model():
 
 
 class Player:
-    def __init__(self, mark, epsilon, new_start=False):
+    def __init__(self, mark, epsilon, model):
         self.mark = mark
 
         self.game_state = None
         self.action = None
         self.log = [] # prior game state, action, later game state, reward
 
-        self.model = init_model()
+        self.model = model
         self.epsilon = epsilon
         self.step_counter = 0
-
-        # load model if this is not the first time we are running this
-        if new_start:
-            self.model.load_weights("saved-models/log_{}.h5".format(self.mark))
 
     def play(self, game_state, callback, first_move=False):
         self.game_state = game_state # save old game state
@@ -65,7 +60,7 @@ class Player:
             # target to predict from is the current game state
             target = game_state.tolist()
 
-            qvals = self.model.predict(np.array([target]), batch_size=1)
+            qvals = self.model.model.predict(np.array([target]), batch_size=1)
 
             # get the action with the highest value
             self.action = np.argmax(qvals)
@@ -79,7 +74,8 @@ class Player:
 
         X = np.array([new_game_state])
         Y = np.array([rewards.tolist()])
-        self.model.fit(X, Y, verbose=False)
+        self.model.model.fit(X, Y, verbose=False)
         if game_over:
-            self.model.save_weights("saved-models/log_{}.h5".format(self.mark),
-                                    overwrite=True)
+            #self.model.model.save_weights("saved-models/log_{}.h5".format(self.mark),
+            #                        overwrite=True)
+            pass

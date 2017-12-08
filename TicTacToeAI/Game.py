@@ -32,7 +32,7 @@ class GameManager:
 
         self.statistic = stat
 
-        self.statistic.started_game(self.current_player.mark)
+        self.statistic.game_started(self.current_player.mark)
 
         # initialise game state
         self.game_state = np.zeros(9, dtype=np.int)
@@ -61,14 +61,14 @@ class GameManager:
 
         # check if game is over, if so give rewards to other player
         if game_end_status == 1:
-            print(self.game_state.reshape((3, 3)))
+            #print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
             reward_callback(rewards, np.array(self.game_state, copy=True), True)
             self.game_over = True
         elif game_end_status == 2:
-            print(self.game_state.reshape((3, 3)))
+            #print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
@@ -86,6 +86,7 @@ class GameManager:
             # check if the currently evaluated move is invalid
             if self.game_state[i] != 0:
                 rewards[i] = INVALID_REWARD
+                self.statistic.invalid_move(mark)
                 continue
 
             # apply our action
@@ -101,9 +102,9 @@ class GameManager:
                 # only save game status if this is the actual action the player
                 # carried out
                 if i == action:
-                    print("win player " + str(mark))
+                    #print("win player " + str(mark))
                     game_end_status = 1
-                    self.statistic.win(mark)
+                    self.statistic.game_ended(np.array(tgs).reshape((3, 3)).tolist(), mark)
                     self.game_state = tgs
 
             # check if current action resulted in a draw
@@ -112,9 +113,9 @@ class GameManager:
                 # only save game status if this is the actual action the player
                 # carried out
                 if i == action:
-                    print("draw")
+                    #print("draw")
                     game_end_status = 2
-                    self.statistic.draw()
+                    self.statistic.game_ended(np.array(tgs).reshape((3, 3)).tolist())
                     self.game_state = tgs
 
             # check if our current action gives us a block of length 2
