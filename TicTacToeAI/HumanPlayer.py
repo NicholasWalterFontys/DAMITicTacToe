@@ -8,6 +8,8 @@ class HumanPlayer:
     def play(self, game_state, callback, first_move=False):
         self.is_my_turn = True
         input_successful = False
+        print("It is your turn. Current game state:")
+        print(game_state)
         while not input_successful:
             action = input("Please enter your action (integer 0 - 8): ")
             try:
