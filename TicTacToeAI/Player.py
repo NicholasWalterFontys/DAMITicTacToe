@@ -56,6 +56,8 @@ class Player:
         if random.random() < self.epsilon:
             # select random field segment to play on
             self.action = random.randint(0, 8)
+            print("random action player {}: ".format(self.mark) + str(
+                self.action))
         else:
             # target to predict from is the current game state
             target = game_state.tolist()

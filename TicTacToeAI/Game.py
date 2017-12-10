@@ -86,7 +86,9 @@ class GameManager:
             # check if the currently evaluated move is invalid
             if self.game_state[i] != 0:
                 rewards[i] = INVALID_REWARD
-                self.statistic.invalid_move(mark)
+                if i == action:
+                    self.statistic.invalid_move(mark)
+                #print("invalid move from player " + str(mark))
                 continue
 
             # apply our action
