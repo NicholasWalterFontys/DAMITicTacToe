@@ -41,7 +41,6 @@ class Statistic:
 
         percentage_done = int((len(self.game_log) / self.total_games) * 100)
         t = "|" + "X" * percentage_done + "_" * (100 - percentage_done) + "|"
-        #print("{} per cent done".format(percentage_done))
         print(t)
 
     def invalid_move(self, player):

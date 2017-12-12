@@ -70,7 +70,7 @@ def learn():
 
         if steps % save_interval == 0:
             model_a.model.save_weights("saved-models/log_1.h5")
-            model_a.model.save_weights("saved-models/log_4.h5")
+            model_b.model.save_weights("saved-models/log_4.h5")
             statistic.print_statistic()
     statistic.ended()
     statistic.print_statistic()
