@@ -69,8 +69,8 @@ def learn():
             print("new epsilon: " + str(epsilon))
 
         if steps % save_interval == 0:
-            model_a.model.save_weights("saved-models/log_1.h5")
-            model_b.model.save_weights("saved-models/log_4.h5")
+            model_a.model.save_weights("saved-models/log_1.h5", overwrite=True)
+            model_b.model.save_weights("saved-models/log_4.h5", overwrite=True)
             statistic.print_statistic()
     statistic.ended()
     statistic.print_statistic()

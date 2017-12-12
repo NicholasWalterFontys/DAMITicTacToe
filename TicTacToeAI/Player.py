@@ -8,56 +8,25 @@ EPSILON_INTERVAL = 100
 SAVE_INTERVAL = 25000
 
 
-def init_model():
-    model = Sequential()
-
-    # one layer consists of a "calculation" part, the activation function
-    # and a Dropout layer which prevents overfitting
-
-    # units --> number of output values in this case x and y for
-    # tic tac toe field
-    # 3*3 because we have a field size of 3 by 3 segments
-
-    # input_shape --> number of input values in this case one for each
-    # segment of the tic tac toe field
-
-    """
-    model.add(Dense(1, batch_input_shape=(4,3)))
-    model.add(Activation('relu'))
-    model.add(Dropout(0.2))
-    """
-
-    # input dim --> 9 for prior gs, 9 for later gs, 1 for action
-    #model.add(Dense(9, input_shape=(9,), kernel_initializer='normal',
-    #                activation='relu'))
-    model.add(Dense(9, input_dim=9, kernel_initializer='normal',
-                    activation='relu'))
-
-    rms = RMSprop()
-    model.compile(loss='mse', optimizer=rms)
-    return model
-
-
 class Player:
     def __init__(self, mark, epsilon, model):
         self.mark = mark
 
         self.game_state = None
         self.action = None
-        self.log = [] # prior game state, action, later game state, reward
+        self.log = []  # prior game state, action, later game state, reward
 
         self.model = model
         self.epsilon = epsilon
         self.step_counter = 0
 
     def play(self, game_state, callback, first_move=False):
-        self.game_state = game_state # save old game state
+        self.game_state = game_state  # save old game state
         self.step_counter += 1
         if random.random() < self.epsilon:
             # select random field segment to play on
             self.action = random.randint(0, 8)
-            print("random action player {}: ".format(self.mark) + str(
-                self.action))
+            #print("random action player {}: ".format(self.mark) + str(self.action))
         else:
             # target to predict from is the current game state
             target = game_state.tolist()
@@ -66,18 +35,10 @@ class Player:
 
             # get the action with the highest value
             self.action = np.argmax(qvals)
-            print("learned action player {}: ".format(self.mark) + str(self.action))
+            #print("learned action player {}: ".format(self.mark) + str(self.action))
         callback(self.action, self.mark, self.reward_me)
 
     def reward_me(self, rewards, new_game_state, game_over=False):
-        # receive reward
-        # receive new game state
-        # save replay as [State, Action, NewState, Reward]
-
         X = np.array([new_game_state])
         Y = np.array([rewards.tolist()])
         self.model.model.fit(X, Y, verbose=False)
-        if game_over:
-            #self.model.model.save_weights("saved-models/log_{}.h5".format(self.mark),
-            #                        overwrite=True)
-            pass
