@@ -61,14 +61,12 @@ class GameManager:
 
         # check if game is over, if so give rewards to other player
         if game_end_status == 1:
-            #print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
             reward_callback(rewards, np.array(self.game_state, copy=True), True)
             self.game_over = True
         elif game_end_status == 2:
-            #print(self.game_state.reshape((3, 3)))
             self.other_player.reward_me(rewards,
                                         np.array(self.game_state, copy=True),
                                         True)
@@ -88,7 +86,6 @@ class GameManager:
                 rewards[i] = INVALID_REWARD
                 if i == action:
                     self.statistic.invalid_move(mark)
-                #print("invalid move from player " + str(mark))
                 continue
 
             # apply our action
@@ -104,7 +101,6 @@ class GameManager:
                 # only save game status if this is the actual action the player
                 # carried out
                 if i == action:
-                    #print("win player " + str(mark))
                     game_end_status = 1
                     self.statistic.game_ended(np.array(tgs).reshape((3, 3)).tolist(), mark)
                     self.game_state = tgs
@@ -115,7 +111,6 @@ class GameManager:
                 # only save game status if this is the actual action the player
                 # carried out
                 if i == action:
-                    #print("draw")
                     game_end_status = 2
                     self.statistic.game_ended(np.array(tgs).reshape((3, 3)).tolist())
                     self.game_state = tgs
