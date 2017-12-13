@@ -28,7 +28,6 @@ class Player:
         if random.random() < self.epsilon:
             # select random field segment to play on
             self.action = random.randint(0, 8)
-            #print("random action player {}: ".format(self.mark) + str(self.action))
         else:
             # target to predict from is the current game state
             target = game_state.tolist()
@@ -37,7 +36,6 @@ class Player:
 
             # get the action with the highest value
             self.action = np.argmax(qvals)
-            #print("learned action player {}: ".format(self.mark) + str(self.action))
         if self.print_status:
             print("Ai player action: " + str(self.action))
         callback(self.action, self.mark, self.reward_me)

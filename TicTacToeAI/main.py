@@ -40,7 +40,7 @@ def play():
 
     ai_player = Player.Player(ai_player_mark, epsilon, model, print_status=True)
     human_player = HumanPlayer.HumanPlayer(human_player_mark)
-    game = Game.GameManager(ai_player, human_player, statistic)
+    Game.GameManager(ai_player, human_player, statistic)
 
 
 def learn():
@@ -48,8 +48,6 @@ def learn():
     global steps
 
     statistic.started()
-
-    first_done = False
 
     model_a = Model.get_model()
     model_b = Model.get_model()
@@ -60,7 +58,6 @@ def learn():
 
 
         steps += 1
-        #print("Game {} started".format(i))
         Game.GameManager(player_a, player_b, statistic)
 
         if steps % eps_inter == 0 and epsilon > eps_min:

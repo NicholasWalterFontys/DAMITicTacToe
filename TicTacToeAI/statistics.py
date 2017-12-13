@@ -59,4 +59,3 @@ class Statistic:
         a = json.dumps(self.game_log, indent=4)
         with open("log.txt", "w") as target:
             target.write(a)
-        print("TODO: print statistic")
