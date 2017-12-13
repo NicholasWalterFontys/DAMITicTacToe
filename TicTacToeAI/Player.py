@@ -9,7 +9,7 @@ SAVE_INTERVAL = 25000
 
 
 class Player:
-    def __init__(self, mark, epsilon, model):
+    def __init__(self, mark, epsilon, model, print_status=False):
         self.mark = mark
 
         self.game_state = None
@@ -20,7 +20,9 @@ class Player:
         self.epsilon = epsilon
         self.step_counter = 0
 
-    def play(self, game_state, callback, first_move=False):
+        self.print_status = print_status
+
+    def play(self, game_state, callback):
         self.game_state = game_state  # save old game state
         self.step_counter += 1
         if random.random() < self.epsilon:
@@ -36,6 +38,8 @@ class Player:
             # get the action with the highest value
             self.action = np.argmax(qvals)
             #print("learned action player {}: ".format(self.mark) + str(self.action))
+        if self.print_status:
+            print("Ai player action: " + str(self.action))
         callback(self.action, self.mark, self.reward_me)
 
     def reward_me(self, rewards, new_game_state, game_over=False):

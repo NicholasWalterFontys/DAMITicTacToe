@@ -37,8 +37,8 @@ class GameManager:
         # initialise game state
         self.game_state = np.zeros(9, dtype=np.int)
 
-        # do one game iteration with first_move = True
-        self.current_player.play(np.array(self.game_state, copy=True), self.action_callback, True)
+        # do first game iteration
+        self.current_player.play(np.array(self.game_state, copy=True), self.action_callback)
 
         self.game_loop()
 

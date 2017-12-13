@@ -9,10 +9,10 @@ import Player
 import statistics
 import sys
 
-game_count = 250000
+game_count = 1000000
 epsilon = 1
 steps = 0
-eps_inter = 150
+eps_inter = 300
 eps_change = 0.001
 eps_min = 0
 
@@ -36,7 +36,9 @@ def play():
     ai_player_mark = 1
     human_player_mark = 4
 
-    ai_player = Player.Player(ai_player_mark, epsilon, True)
+    model = Model.get_model("saved-models/log_1.h5")
+
+    ai_player = Player.Player(ai_player_mark, epsilon, model, print_status=True)
     human_player = HumanPlayer.HumanPlayer(human_player_mark)
     game = Game.GameManager(ai_player, human_player, statistic)
 

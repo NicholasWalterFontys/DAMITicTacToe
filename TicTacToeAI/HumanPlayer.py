@@ -6,6 +6,8 @@ class HumanPlayer:
         self.callback = None
 
     def play(self, game_state, callback, first_move=False):
+        print("It is your turn. Current game state:")
+        print(game_state)
         self.is_my_turn = True
         input_successful = False
         while not input_successful:
