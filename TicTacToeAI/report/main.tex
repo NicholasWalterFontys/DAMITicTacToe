@@ -1,22 +1,30 @@
 \documentclass[11pt,a4paper,titlepage]{article}
 \usepackage{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    frame=single, % adds a frame around the code
+    xleftmargin=3.4pt,
+    xrightmargin=3.4pt,
+}
 \include{sebivenlo}
 \author{Pia Erbrath, Nick Walter}
 \title{TIC TAC TOE AI}
 \begin{document}
 \maketitle
 
-\include{researchQuestion}
+\input{researchQuestion}
 
-\include{literature}
+\input{literature}
 
-\include{implementationUsed}
+\input{implementationUsed}
 
-\include{implementationConfiguration}
+\input{implementationConfiguration}
 
-\include{verifyResult}
+\input{verifyResult}
 
-\include{result}
+\input{result}
 
 \include{references}
 \end{document}

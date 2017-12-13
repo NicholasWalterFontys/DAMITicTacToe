@@ -1,7 +1,30 @@
 \section{Used Implementation Platform}
-
-After conducting our research concerning this topic, we decided to make use of a family of algorithms called "reinforcement learning". These are based on the premise that either after every action or once the game or a section of the game is completed, the algorithm gets feedback on its decisions: Positive feedback if it made "good" choices, negative for "bad" choices.
-
-Our final choice was to use Keras as our neural network framework. This is basically an interface to the tensorflow library, which for our purposes offers functionality of neural networks. Using Keras made it a lot simpler for use to define, create and use neural networks.
+Our final choice was to use Keras as our neural network framework. This is basically an interface to the Tensorflow library, which for our purposes offers functionality of neural networks. Using Keras made it a lot simpler for use to define, create and use neural networks.
 
 Another advantage of using Keras is that it is written in Python and is therefore using a programming language we are familiar with and can therefore more easily work with.
+
+In general the generation of a neural network in Keras look like this:
+\begin{lstlisting}[frame=single,language=Python,caption={Creation of a neural network in Keras},captionpos=b]
+	model = Sequential()
+	model.add(Dense(32, input_shape=(784,)))
+	model.compile(optimizer='rmsprop', loss='mse')
+\end{lstlisting}
+ The sequential is the standrard implementation of a neural network, where several different layers could be added. In this example a Dense layer with ouptput dimension shape of 32. With the compile method is the learning process configured. 
+
+After that the model could be trained with the fit method. 
+\begin{lstlisting}[frame=single,language=Python,caption={Trianing of a neural network in Keras},captionpos=b]
+	model.fit(X, y, epochs=10)
+\end{lstlisting}
+The variable X is a list with all training data features inside and y a list with all associated rewards according to the training data features. The epochs declares how often each data item should be used for training.
+
+The model could also be tested on bias and errors with :
+\begin{lstlisting}[frame=single,language=Python,caption={Evaluation of a neural network in Keras},captionpos=b]
+	model.evaluate(x_test, y_test)
+\end{lstlisting}
+
+One other important method is the prediction of new data. That is also simple, just type:
+\begin{lstlisting}[frame=single,language=Python,caption={Predicting of a neural network in Keras},captionpos=b]
+	result = model.predict(x)
+\end{lstlisting}
+
+All these methods are comparable to the scikit-learn library from Python, we used in the previous lessons.
