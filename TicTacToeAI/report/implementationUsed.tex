@@ -1,15 +1,15 @@
 \section{Used Implementation Platform}
-Our final choice was to use Keras as our neural network framework. This is basically an interface to the Tensorflow library, which for our purposes offers functionality of neural networks. Using Keras made it a lot simpler for use to define, create and use neural networks.
+Our final choice was to use Keras as our neural network framework. This is basically an interface to the Tensorflow library, which for our purposes offers functionality of neural networks. Using Keras made it a lot simpler for us to define, create and use neural networks.
 
 Another advantage of using Keras is that it is written in Python and is therefore using a programming language we are familiar with and can therefore more easily work with.
 
-In general the generation of a neural network in Keras look like this:
+In general the generation of a neural network in Keras looks like this:
 \begin{lstlisting}[frame=single,language=Python,caption={Creation of a neural network in Keras},captionpos=b]
 	model = Sequential()
 	model.add(Dense(32, input_shape=(784,)))
 	model.compile(optimizer='rmsprop', loss='mse')
 \end{lstlisting}
- The sequential is the standrard implementation of a neural network, where several different layers could be added. In this example a Dense layer with ouptput dimension shape of 32. With the compile method is the learning process configured. 
+ The sequential is the standard implementation of a neural network, where several different layers could be added. In this example a Dense layer with output dimension shape of 32. The compile method concludes the configuration of the learning process.
 
 After that the model could be trained with the fit method. 
 \begin{lstlisting}[frame=single,language=Python,caption={Trianing of a neural network in Keras},captionpos=b]
