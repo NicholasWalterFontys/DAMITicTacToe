@@ -52,8 +52,9 @@ The next step was to define the rewards and punishments for each of the actions 
 	\caption{Table with rewards}
 	\label{tablRewards}
 \end{table}
+Implementing the overall game framework therefore also involved checking the AI's actions to see whether any of these moves were done.
 
-
+After the checks were completed, all rewards were summed up and fitted to the model.
 \begin{lstlisting}[frame=single,language=Python,caption={Method of },captionpos=b]
 def reward_me(self, rewards, new_game_state, game_over=False):
     X = np.array([new_game_state])
@@ -61,4 +62,3 @@ def reward_me(self, rewards, new_game_state, game_over=False):
     self.model.model.fit(X, Y, verbose=False)
 \end{lstlisting}
 
-Implementing the overall game framework therefore also involved checking the AI's actions to see whether any of these moves were done.
