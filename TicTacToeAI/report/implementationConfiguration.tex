@@ -2,10 +2,10 @@
 
 Once the basic framework for our implementation was decided upon, the next step was to configure it to fit our needs. This meant defining the structure of the neural net we wanted to use as well as the rewards/ punishments the algorithm would receive for each possible action.
 
-We initially based our decisions regarding the neural net's structure on other examples of game AIs using a similar approach, such as the learning RC-car (\cite{Harvey2017}) project as well as the "Keras plays Catch" example (\cite{Santana17}). However while we were able to run our code with these structures and some slight modifications, neither of them yielded the results we wanted to see: The AI did not seem to actually learn the game.
+We initially based our decisions regarding the neural net's structure on other examples of game \ac{AI}s using a similar approach, such as the learning RC-car (\cite{Harvey2017}) project as well as the "Keras plays Catch" example (\cite{Santana17}). However while we were able to run our code with these structures and some slight modifications, neither of them yielded the results we wanted to see: The \ac{AI} did not seem to actually learn the game.
 
-Afterwards we decided to start from scratch and implement the structure from the ground up: A single layer of densely connected neurons was the result of this process: It takes 9 input arguments (the values of each of the segments of the Tic Tac Toe field, e.g. "empty", "own mark" or "enemy mark" expressed as integers) and produces 9 outputs (a confidence value between 0 and 1 as a float depicting the probability that the corresponding action would be rewarded highly). By selecting the action associated with the highest predicted probability of success, the AI then "decides" upon an action to take.
-\begin{lstlisting}[frame=single,language=Python,caption={Implementation of our neural network},captionpos=b]
+Afterwards we decided to start from scratch and implement the structure from the ground up: A single layer of densely connected neurons was the result of this process: It takes 9 input arguments (the values of each of the segments of the Tic Tac Toe field, e.g. "empty", "own mark" or "enemy mark" expressed as integers) and produces 9 outputs (a confidence value between 0 and 1 as a float depicting the probability that the corresponding action would be rewarded highly). By selecting the action associated with the highest predicted probability of success, the \ac{AI} then "decides" upon an action to take.
+\begin{lstlisting}[frame=single,language=Python,caption={Creation of our neural network},captionpos=b]
 self.model = Sequential()
 
 # input size of 9 (rewards for each possible move)
@@ -15,8 +15,9 @@ self.model.add(Dense(9, input_dim=9,
                      activation='relu'))
 self.model.compile(loss='mse', optimizer=RMSprop())
 \end{lstlisting}
+\newpage
 
-\begin{lstlisting}[frame=single,language=Python,caption={Method of },captionpos=b]
+\begin{lstlisting}[frame=single,language=Python,caption={Method of given next action},captionpos=b]
 def play(self, game_state, callback, first_move=False):             
     self.game_state = game_state  # save old game state
     if random.random() < self.epsilon:
@@ -35,7 +36,7 @@ def play(self, game_state, callback, first_move=False):
     callback(self.action, self.mark, self.reward_me)
 \end{lstlisting}
 
-The next step was to define the rewards and punishments for each of the actions that the AI could possibly carry out: We started this process by defining what possible game moves were. Later, we decided how big of a reward each action should yield:
+The next step was to define the rewards and punishments for each of the actions that the \ac{AI} could possibly carry out: We started this process by defining what possible game moves were. Later, we decided how big of a reward each action should yield. The table \ref{tablRewards} presents the reward the \ac{AI} is currently trained on.
 
 \begin{table}[H]
 	\begin{tabular}{|l|c|}\hline
@@ -52,10 +53,10 @@ The next step was to define the rewards and punishments for each of the actions 
 	\caption{Table with rewards}
 	\label{tablRewards}
 \end{table}
-Implementing the overall game framework therefore also involved checking the AI's actions to see whether any of these moves were done.
+Implementing the overall game framework therefore also involved checking the \ac{AI}'s actions to see whether any of these moves were done.
 
 After the checks were completed, all rewards were summed up and fitted to the model.
-\begin{lstlisting}[frame=single,language=Python,caption={Method of },captionpos=b]
+\begin{lstlisting}[frame=single,language=Python,caption={Method of processing the reward},captionpos=b]
 def reward_me(self, rewards, new_game_state, game_over=False):
     X = np.array([new_game_state])
     Y = np.array([rewards.tolist()])

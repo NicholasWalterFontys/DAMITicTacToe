@@ -1,7 +1,9 @@
 \documentclass[11pt,a4paper,titlepage]{article}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{graphicx}
 \usepackage{listings}
+\usepackage{acronym}
 \lstset{
     basicstyle=\ttfamily\footnotesize,
     frame=single, % adds a frame around the code
@@ -9,22 +11,32 @@
     xrightmargin=3.4pt,
 }
 \include{sebivenlo}
-\author{Pia Erbrath, Nick Walter}
-\title{TIC TAC TOE AI}
+\author{Pia Erbrath, Nick Walter \\ \\ Module: Data Mining \\ Course: Software Engineering \\ Institute: FHTenL}
+\title{TIC TAC TOE ARTIFICAL INTELLIGENCE}
 \begin{document}
 \maketitle
+\tableofcontents
+\listoffigures 
+\listoftables
+\lstlistoflistings
+\section*{Acronyms}
+\begin{acronym}[Bash]
+ \acro{AI}{Artifical Intellligence}
+\end{acronym}
+\newpage
+
 
 \input{researchQuestion}
 
 \input{literature}
 
-\input{implementationUsed}
+\include{implementationUsed}
 
-\input{implementationConfiguration}
+\include{implementationConfiguration}
 
 \input{verifyResult}
 
-\input{result}
+\include{result}
 
 \include{references}
 \end{document}
